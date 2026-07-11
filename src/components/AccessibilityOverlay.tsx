@@ -687,7 +687,7 @@ export const AccessibilityOverlay: React.FC<AccessibilityOverlayProps> = ({
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
+                        <label htmlFor="ada-req-name" className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
                           Your Name (Optional)
                         </label>
                         <input
@@ -701,7 +701,7 @@ export const AccessibilityOverlay: React.FC<AccessibilityOverlayProps> = ({
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
+                        <label htmlFor="ada-req-type" className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
                           Assistance Type
                         </label>
                         <select
@@ -721,7 +721,7 @@ export const AccessibilityOverlay: React.FC<AccessibilityOverlayProps> = ({
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
+                        <label htmlFor="ada-req-section" className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
                           Current Stadium Section <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -736,7 +736,7 @@ export const AccessibilityOverlay: React.FC<AccessibilityOverlayProps> = ({
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
+                        <label htmlFor="ada-req-seat" className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
                           Row / Seat Number
                         </label>
                         <input
@@ -751,7 +751,7 @@ export const AccessibilityOverlay: React.FC<AccessibilityOverlayProps> = ({
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
+                      <label htmlFor="ada-req-notes" className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest block">
                         Additional details or special requirements
                       </label>
                       <textarea

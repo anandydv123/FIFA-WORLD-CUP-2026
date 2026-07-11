@@ -164,6 +164,7 @@ export const FanDashboard: React.FC<FanDashboardProps> = ({
             </p>
 
             <form id="seat-locator-form" onSubmit={handleLocateSeat} className="flex gap-2">
+              <label htmlFor="seat-section-input" className="sr-only">Seat Section Number</label>
               <input
                 id="seat-section-input"
                 type="text"
@@ -323,6 +324,7 @@ export const FanDashboard: React.FC<FanDashboardProps> = ({
 
             <div className="space-y-4">
               <div className="flex gap-2">
+                <label htmlFor="translate-input" className="sr-only">Spectator Phrase to Translate</label>
                 <input
                   id="translate-input"
                   type="text"
@@ -396,6 +398,7 @@ export const FanDashboard: React.FC<FanDashboardProps> = ({
           <div className="flex flex-col sm:flex-row gap-2.5 mb-5">
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-3 w-3.5 h-3.5 text-slate-500" />
+              <label htmlFor="concession-search-field" className="sr-only">Search Concessions</label>
               <input
                 id="concession-search-field"
                 type="text"

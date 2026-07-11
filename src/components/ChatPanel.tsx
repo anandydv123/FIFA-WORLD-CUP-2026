@@ -245,6 +245,7 @@ export const ChatPanel: React.FC<ChatPanelProps> = ({
         }}
         className="p-3 bg-black/40 border-t border-white/10 flex gap-2 items-center relative"
       >
+        <label htmlFor="chat-input-field" className="sr-only">Query tactical assistant</label>
         <input
           id="chat-input-field"
           type="text"

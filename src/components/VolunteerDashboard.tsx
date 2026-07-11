@@ -178,6 +178,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
           </div>
 
           <form id="add-task-form" onSubmit={handleAddTask} className="flex gap-2 mt-6">
+            <label htmlFor="new-task-input" className="sr-only">New Shift Task</label>
             <input
               id="new-task-input"
               type="text"
@@ -210,7 +211,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-2.5">
                 <div>
-                  <label className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Language</label>
+                  <label htmlFor="spec-lang-select" className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Language</label>
                   <select
                     id="spec-lang-select"
                     className="w-full bg-black/40 border border-white/10 rounded-xl p-2.5 text-xs text-slate-300 focus:border-blue-500 outline-none"
@@ -230,6 +231,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
                 </div>
               </div>
 
+              <label htmlFor="spectator-phrase-input" className="sr-only">Spectator Phrase</label>
               <input
                 id="spectator-phrase-input"
                 type="text"
@@ -282,7 +284,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
 
           <form id="incident-report-form" onSubmit={handleReportSubmit} className="space-y-4">
             <div>
-              <label className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Specific Location</label>
+              <label htmlFor="report-location-input" className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Specific Location</label>
               <input
                 id="report-location-input"
                 type="text"
@@ -296,7 +298,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
 
             <div className="grid grid-cols-2 gap-2.5">
               <div>
-                <label className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Category</label>
+                <label htmlFor="report-category-select" className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Category</label>
                 <select
                   id="report-category-select"
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-2 py-2.5 text-xs text-slate-300 focus:border-blue-500 outline-none"
@@ -312,7 +314,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
               </div>
 
               <div>
-                <label className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Severity</label>
+                <label htmlFor="report-severity-select" className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Severity</label>
                 <select
                   id="report-severity-select"
                   className="w-full bg-black/40 border border-white/10 rounded-xl px-2 py-2.5 text-xs text-slate-300 focus:border-blue-500 outline-none"
@@ -327,7 +329,7 @@ export const VolunteerDashboard: React.FC<VolunteerDashboardProps> = ({
             </div>
 
             <div>
-              <label className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Issue Details</label>
+              <label htmlFor="report-description-textarea" className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest block mb-1.5">Issue Details</label>
               <textarea
                 id="report-description-textarea"
                 placeholder="Describe what you see clearly (materials, fan state)..."
