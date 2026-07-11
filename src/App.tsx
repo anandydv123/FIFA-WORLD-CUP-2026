@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { UserRole, Stadium, Gate, Concession, Volunteer, TransitRoute, Incident, StadiumTelemetry } from "./types";
 import {
   STADIUMS,
@@ -37,18 +37,12 @@ export default function App() {
   const [transit, setTransit] = useState<TransitRoute[]>([...INITIAL_TRANSIT]);
   const [incidents, setIncidents] = useState<Incident[]>([...INITIAL_INCIDENTS]);
 
-  // Command telemetry state
-  const [telemetry, setTelemetry] = useState<StadiumTelemetry>({
-    crowdDensity: 78,
-    activeIncidentsCount: INITIAL_INCIDENTS.filter((i) => i.status !== "Resolved").length,
-    averageGateWaitMinutes: 11,
-    concessionEfficiency: 88,
-    transitLoad: 65,
-    sustainabilityScore: 92,
-  });
+  // Keep separate simple states for dynamic telemetry fields
+  const [sustainabilityScore, setSustainabilityScore] = useState(92);
+  const [concessionEfficiency, setConcessionEfficiency] = useState(88);
 
-  // Calculate dynamic telemetry averages on dependency shift
-  useEffect(() => {
+  // Calculate dynamic telemetry values on rendering to avoid double render state update lag
+  const telemetry = useMemo<StadiumTelemetry>(() => {
     const activeGates = gates[selectedStadium.id] || [];
     const openGates = activeGates.filter((g) => g.status !== "Closed");
     const avgWait = openGates.length > 0
@@ -57,39 +51,33 @@ export default function App() {
 
     const activeIncs = incidents.filter((i) => i.status !== "Resolved").length;
 
-    setTelemetry((prev) => ({
-      ...prev,
-      averageGateWaitMinutes: avgWait,
-      activeIncidentsCount: activeIncs,
-      // Adjust density and transit slightly based on wait and incidents
+    return {
       crowdDensity: Math.min(95, Math.max(40, 70 + avgWait / 2 + activeIncs * 3)),
+      activeIncidentsCount: activeIncs,
+      averageGateWaitMinutes: avgWait,
+      concessionEfficiency,
       transitLoad: Math.min(95, Math.max(30, 60 + avgWait)),
-    }));
-  }, [gates, incidents, selectedStadium]);
+      sustainabilityScore,
+    };
+  }, [gates, incidents, selectedStadium, sustainabilityScore, concessionEfficiency]);
 
   // ----------------------------------------------------
   // EVENT HANDLERS / MUTATORS
   // ----------------------------------------------------
 
   // Reset simulator
-  const handleResetSim = () => {
+  const handleResetSim = useCallback(() => {
     setGates({ ...INITIAL_GATES });
     setConcessions({ ...INITIAL_CONCESSIONS });
     setVolunteers([...INITIAL_VOLUNTEERS]);
     setTransit([...INITIAL_TRANSIT]);
     setIncidents([...INITIAL_INCIDENTS]);
-    setTelemetry({
-      crowdDensity: 78,
-      activeIncidentsCount: INITIAL_INCIDENTS.filter((i) => i.status !== "Resolved").length,
-      averageGateWaitMinutes: 11,
-      concessionEfficiency: 88,
-      transitLoad: 65,
-      sustainabilityScore: 92,
-    });
-  };
+    setSustainabilityScore(92);
+    setConcessionEfficiency(88);
+  }, []);
 
   // Submit Incident Report (from Volunteer shift console or generic spectators)
-  const handleReportIncident = (
+  const handleReportIncident = useCallback((
     newInc: Omit<Incident, "id" | "reportedAt" | "status" | "aiDispatchRecommendation">
   ) => {
     const freshIncident: Incident = {
@@ -101,10 +89,10 @@ export default function App() {
     };
 
     setIncidents((prev) => [freshIncident, ...prev]);
-  };
+  }, []);
 
   // Update Incident Status (Dispatch/Resolve)
-  const handleUpdateIncidentStatus = (
+  const handleUpdateIncidentStatus = useCallback((
     incidentId: string,
     status: "Dispatched" | "Resolved",
     volunteerId?: string,
@@ -125,26 +113,23 @@ export default function App() {
         return inc;
       })
     );
-  };
+  }, []);
 
   // Update Volunteer Shift Status
-  const handleUpdateVolunteerStatus = (volunteerId: string, status: Volunteer["status"]) => {
+  const handleUpdateVolunteerStatus = useCallback((volunteerId: string, status: Volunteer["status"]) => {
     setVolunteers((prev) =>
       prev.map((vol) => (vol.id === volunteerId ? { ...vol, status } : vol))
     );
-  };
+  }, []);
 
   // Refresh Telemetry Sensors (Slight randomizers to represent dynamic streams)
-  const handleRefreshTelemetry = () => {
-    setTelemetry((prev) => ({
-      ...prev,
-      sustainabilityScore: Math.min(100, Math.max(60, prev.sustainabilityScore + (Math.random() > 0.5 ? 2 : -2))),
-      concessionEfficiency: Math.min(100, Math.max(70, prev.concessionEfficiency + (Math.random() > 0.5 ? 3 : -3))),
-    }));
+  const handleRefreshTelemetry = useCallback(() => {
+    setSustainabilityScore((prev) => Math.min(100, Math.max(60, prev + (Math.random() > 0.5 ? 2 : -2))));
+    setConcessionEfficiency((prev) => Math.min(100, Math.max(70, prev + (Math.random() > 0.5 ? 3 : -3))));
 
     // Randomize some gate wait times slightly to demonstrate reactivity
-    const currentStadiumId = selectedStadium.id;
     setGates((prev) => {
+      const currentStadiumId = selectedStadium.id;
       const gatesToUpdate = prev[currentStadiumId] || [];
       const updatedGates = gatesToUpdate.map((g) => {
         if (g.status === "Closed") return g;
@@ -159,18 +144,18 @@ export default function App() {
         [currentStadiumId]: updatedGates,
       };
     });
-  };
+  }, [selectedStadium]);
 
   // Quick action triggers from clicking Map items
-  const handleMapGateClick = (gateName: string) => {
+  const handleMapGateClick = useCallback((gateName: string) => {
     const chatInput = document.getElementById("chat-input-field") as HTMLInputElement;
     if (chatInput) {
       chatInput.value = `Tell me about the wait times and access routes near ${gateName}`;
       chatInput.focus();
     }
-  };
+  }, []);
 
-  const handleMapConcessionClick = (id: string) => {
+  const handleMapConcessionClick = useCallback((id: string) => {
     const conc = (concessions[selectedStadium.id] || []).find((c) => c.id === id);
     if (!conc) return;
     const chatInput = document.getElementById("chat-input-field") as HTMLInputElement;
@@ -178,9 +163,9 @@ export default function App() {
       chatInput.value = `Is there low congestion at ${conc.name} located at ${conc.location}? What specialty food do they have?`;
       chatInput.focus();
     }
-  };
+  }, [concessions, selectedStadium]);
 
-  const handleMapIncidentClick = (id: string) => {
+  const handleMapIncidentClick = useCallback((id: string) => {
     const inc = incidents.find((i) => i.id === id);
     if (!inc) return;
     // Highlight or ask in chat
@@ -189,7 +174,7 @@ export default function App() {
       chatInput.value = `Can you analyze stadium incident ${inc.id} (${inc.category}) at ${inc.location}? Provide safety action guidelines.`;
       chatInput.focus();
     }
-  };
+  }, [incidents]);
 
   return (
     <div className="min-h-screen bg-slate-950 font-sans text-slate-100 flex flex-col justify-between">
