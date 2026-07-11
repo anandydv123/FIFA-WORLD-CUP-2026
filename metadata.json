@@ -1,0 +1,8 @@
+{
+  "name": "FIFA 2026 Stadium Operations & Fan Assistant",
+  "description": "A full-stack, Generative AI-enabled system for the FIFA World Cup 2026, offering role-based assistance for Fans, Volunteers, and Stadium Operations Staff. Features smart navigation, crowd management, multilingual translation, transit tracking, and operational decision support.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
